@@ -11,6 +11,7 @@ tmp
 # dependencies
 node_modules
 /.nx
+/.vscode
 
 # IDEs and editors
 /.idea
