@@ -4,11 +4,15 @@ import { AppModule } from './app/app.module';
 
 
 async function bootstrap() {
+  const globalPrefix = 'api';
+  const port = process.env.PORT || 3001;
+
   const app = await NestFactory.create(AppModule);
-  await app.init();
-  
+  app.setGlobalPrefix(globalPrefix);
+  await app.listen(port);
+
   Logger.log(
-    `🚀 Accounts is running`
+    `🚀 API is running on: http://localhost:${port}/${globalPrefix}`
   );
 }
 
