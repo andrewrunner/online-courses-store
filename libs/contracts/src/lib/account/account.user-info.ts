@@ -1,7 +1,5 @@
 import { IUser } from '@accounts/interfaces';
 import {IsString} from 'class-validator';
-
-/* eslint-disable @typescript-eslint/no-namespace */
 export namespace AccountUserInfo {
     
     export const topic = 'account.user-info.query';

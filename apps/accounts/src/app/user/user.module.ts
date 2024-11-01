@@ -4,6 +4,8 @@ import { User, UserSchema } from './models/user.model';
 import { UserRepository } from './respositories/user.repository';
 import { UserCommandsController } from './user.commands.controller';
 import { UserQueriesController } from './user.queries.controller';
+import { UserEventEmitter } from './user.event-emitter';
+import { UserService } from './user.service';
 
 @Module({
   imports: [
@@ -11,7 +13,7 @@ import { UserQueriesController } from './user.queries.controller';
       { name: User.name, schema: UserSchema},
     ])
   ],
-  providers: [UserRepository],
+  providers: [UserRepository, UserEventEmitter, UserService],
   exports: [UserRepository],
   controllers: [UserCommandsController, UserQueriesController]
 })

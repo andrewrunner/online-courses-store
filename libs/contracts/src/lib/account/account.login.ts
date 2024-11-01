@@ -1,6 +1,5 @@
 import {IsEmail, IsString} from 'class-validator';
 
-/* eslint-disable @typescript-eslint/no-namespace */
 export namespace AccountLogin {
     
     export const topic = 'account.login.command';
