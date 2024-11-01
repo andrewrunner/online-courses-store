@@ -5,13 +5,15 @@ import { RMQService } from 'nestjs-rmq';
 import { UserEntity } from "./entities/user.entity";
 import { IUser } from "@accounts/interfaces";
 import { BuyCourseSaga } from "./sagas/buy-course.saga";
+import { UserEventEmitter } from "./user.event-emitter";
 
 @Injectable()
 export class UserService {
 
     constructor(
         private readonly userRepository: UserRepository,
-        private readonly rmqService: RMQService
+        private readonly rmqService: RMQService,
+        private readonly userEventEmitter: UserEventEmitter
     ) {}
 
     async changeProfile(user: Pick<IUser, 'displayName'>, id:string) {
@@ -22,11 +24,10 @@ export class UserService {
 
         const userEntity = new UserEntity(findedUser);
         userEntity.updateProfile(user.displayName);
-        await this.userRepository.updateUser(userEntity);
+        await this.updateUser(userEntity);
 
         return {};
     }
-
 
     async buyCourse(userId:string, courseId:string) {
         
@@ -38,13 +39,12 @@ export class UserService {
 
         const saga = new BuyCourseSaga(userEntity, courseId, this.rmqService);
         const {user, paymentLink} = await saga.getState().pay();
-        await this.userRepository.updateUser(user);
+        await this.updateUser(user);
 
         return {
             paymentLink
         }
     }
-
 
     async checkPayment(userId:string, courseId:string) {
         
@@ -56,7 +56,7 @@ export class UserService {
 
         const saga = new BuyCourseSaga(userEntity, courseId, this.rmqService);
         const {user, status } = await saga.getState().checkPayment();
-        await this.userRepository.updateUser(user);
+        await this.updateUser(user);
 
         return {
             status
@@ -64,5 +64,11 @@ export class UserService {
     }
 
 
+    private updateUser(user:UserEntity) {
+        return Promise.all([
+            this.userEventEmitter.handle(user),
+            this.userRepository.updateUser(user),
+        ])
 
+    }
 }
