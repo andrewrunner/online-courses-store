@@ -62,8 +62,12 @@ export class UserEntity implements IUser {
 	// 	this.courses = this.courses.filter((course) => course._id !== courseId);
 	// }
 
+	public getCourseState(courseId:string): PurchaseState {
+		return this.courses.find((item) => item.courseId === courseId)?.purchaseState ?? PurchaseState.Started;
+	}
+
 	public setCourseStatus(courseId:string, state:PurchaseState) {
-		const isExists = this.courses.find((course) => course._id === courseId);
+		const isExists = this.courses.find((course) => course.courseId === courseId);
 		if(!isExists) {
 			this.courses.push({
 				courseId,
@@ -73,7 +77,7 @@ export class UserEntity implements IUser {
 		}
 
 		if(state === PurchaseState.Cenceled) {
-			this.courses = this.courses.filter((course) => course._id !== courseId);
+			this.courses = this.courses.filter((course) => course.courseId !== courseId);
 			return this;
 		}
 

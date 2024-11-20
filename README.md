@@ -20,15 +20,18 @@ npx nx run-many --target=serve --all --parallel=4
 npx nx build accounts
 
 #To see all available targets to run for a project
-
 npx nx show project accounts
-
 
 #To generate a new application
 npx nx g @nx/nest:app demo
 
 #To generate a new library
 npx nx g @nx/node:lib mylib
+
+# Test app
+npx nx test accounts
+npx nx test accounts --skip-nx-cache
+npx nx test accounts --skip-nx-cache --runInBand 
 
 #To connect to Nx Cloud, run the following command:
 npx nx connect
